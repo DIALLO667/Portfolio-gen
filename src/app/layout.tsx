@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import {
-  ClerkProvider,
+import { ClerkProvider } from "@clerk/nextjs";
+import { frFR } from "@clerk/localizations";
 
-} from '@clerk/nextjs';
-import{ frFR} from '@clerk/localizations';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,15 +26,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={frFR}>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      localization={frFR}
+    >
       <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased m-4` }
-      >
-        {children}
-      </body>
-    </html>
-      </ClerkProvider>
-    
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased m-4`}>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
