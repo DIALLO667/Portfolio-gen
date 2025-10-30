@@ -1,25 +1,25 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
-  "/",
-  '/sign-up(.*)', 
-  "/",
+  "/sign-up(.*)",
   "/api(.*)",
-])
+]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    await auth.protect()
+  try {
+    if (!isPublicRoute(req)) {
+      await auth.protect(); // protége les routes privées
+    }
+  } catch (err) {
+    console.error("Middleware error:", err); // log l'erreur sur Vercel
+    return new Response("Unauthorized", { status: 401 }); // renvoie 401 au lieu de 500
   }
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    "/((?!_next/|.*\\.(css|js|png|jpg|jpeg|svg|gif|woff2?|ico)).*)", // ignore statiques
+    "/api(.*)" // middleware pour API
   ],
-}
-
+};
