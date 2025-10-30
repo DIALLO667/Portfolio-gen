@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
+// Définir les routes publiques
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
@@ -9,7 +10,7 @@ const isPublicRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   try {
     if (!isPublicRoute(req)) {
-      await auth.protect(); // protége les routes privées
+      await auth.protect(); // protège les routes privées
     }
   } catch (err) {
     console.error("Middleware error:", err); // log l'erreur sur Vercel
@@ -19,7 +20,7 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    "/((?!_next/|.*\\.(css|js|png|jpg|jpeg|svg|gif|woff2?|ico)).*)", // ignore statiques
-    "/api(.*)" // middleware pour API
+    "/:path((?!_next/|.*\\.(css|js|png|jpg|jpeg|svg|gif|woff2?|ico))*)", // ignore statiques et _next
+    "/api/:path*" // middleware sur API
   ],
 };
