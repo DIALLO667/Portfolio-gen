@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 type Portfolio = {
@@ -8,7 +9,7 @@ type Portfolio = {
   username: string;
   fullName: string;
   bio: string;
-  imageUrl: string;
+  imageUrl?: string;
 };
 
 export default function DashboardPage() {
@@ -36,19 +37,25 @@ export default function DashboardPage() {
       {portfolios.map((p) => (
         <div key={p.id} className="p-4 border rounded-lg flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {p.imageUrl && <img src={p.imageUrl} alt={p.fullName} className="w-16 h-16 rounded-full object-cover" />}
+            {p.imageUrl ? (
+              <img src={p.imageUrl} alt={p.fullName} className="w-16 h-16 rounded-full object-cover" />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                U
+              </div>
+            )}
             <div>
               <p className="font-bold">{p.fullName}</p>
               <p className="text-sm text-gray-500">{p.bio}</p>
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => window.open(`/portfolio/${p.username}`, "_blank")}>
-              Aperçu
-            </Button>
-            <Button onClick={() => window.location.href = `/dashboard/edit-portfolio/${p.id}`}>
-              Modifier
-            </Button>
+            <Link href={`/portfolio/${p.username}`} target="_blank">
+              <Button variant="outline">Aperçu</Button>
+            </Link>
+            <Link href={`/dashboard/edit-portfolio/${p.id}`}>
+              <Button>Modifier</Button>
+            </Link>
           </div>
         </div>
       ))}

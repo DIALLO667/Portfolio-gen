@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Upsert user dans la table User
+    // Vérifie / crée l'utilisateur si besoin
     await prisma.user.upsert({
       where: { clerkId: user.id },
       update: {},
@@ -40,49 +40,33 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Champs obligatoires manquants" }, { status: 400 });
     }
 
-    // Vérifie si le portfolio existe
-    const existingPortfolio = await prisma.portfolio.findFirst({
-      where: { userId: user.id },
+    // 🧩 Vérifie si un autre portfolio a déjà ce username
+    const usernameExists = await prisma.portfolio.findUnique({
+      where: { username },
     });
 
-    let portfolio;
-    if (existingPortfolio) {
-      portfolio = await prisma.portfolio.update({
-        where: { id: existingPortfolio.id },
-        data: {
-          username,
-          fullName,
-          bio,
-          email,
-          address,
-          imageUrl,
-          socialLinks,
-          skills,
-          theme,
-          projects,
-          education,
-          experience,
-        },
-      });
-    } else {
-      portfolio = await prisma.portfolio.create({
-        data: {
-          userId: user.id,
-          username,
-          fullName,
-          bio,
-          email,
-          address,
-          imageUrl,
-          socialLinks,
-          skills,
-          theme,
-          projects,
-          education,
-          experience,
-        },
-      });
+    if (usernameExists) {
+      return NextResponse.json({ error: "Ce nom d'utilisateur est déjà utilisé" }, { status: 400 });
     }
+
+    // ✅ Crée un nouveau portfolio à chaque fois
+    const portfolio = await prisma.portfolio.create({
+      data: {
+        userId: user.id,
+        username,
+        fullName,
+        bio,
+        email,
+        address,
+        imageUrl,
+        socialLinks: JSON.stringify(socialLinks || {}),
+        skills,
+        theme: JSON.stringify(theme || {}),
+        projects: JSON.stringify(projects || []),
+        education: JSON.stringify(education || []),
+        experience: JSON.stringify(experience || []),
+      },
+    });
 
     return NextResponse.json({ success: true, portfolio });
   } catch (err: any) {

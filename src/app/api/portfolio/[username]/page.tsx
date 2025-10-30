@@ -1,4 +1,3 @@
-// app/dashboard/[username]/page.tsx
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
@@ -18,13 +17,30 @@ export default async function PortfolioPage({ params }: PortfolioProps) {
     return <p className="text-red-500">Aucun portfolio trouvé</p>;
   }
 
-  // Parse les champs JSON
-  const education = JSON.parse(portfolio.education as string || "[]");
-  const experience = JSON.parse(portfolio.experience as string || "[]");
-  const projects = JSON.parse(portfolio.projects as string || "[]");
-  const theme = JSON.parse(portfolio.theme as string || "{}");
-  const socialLinks = JSON.parse(portfolio.socialLinks as string || "{}");
-  const skills = portfolio.skills || [];
+  // Parse les champs JSON de manière sécurisée
+  const education = Array.isArray(portfolio.education)
+    ? portfolio.education
+    : JSON.parse(portfolio.education as string || "[]");
+
+  const experience = Array.isArray(portfolio.experience)
+    ? portfolio.experience
+    : JSON.parse(portfolio.experience as string || "[]");
+
+  const projects = Array.isArray(portfolio.projects)
+    ? portfolio.projects
+    : JSON.parse(portfolio.projects as string || "[]");
+
+  const theme = typeof portfolio.theme === "object"
+    ? portfolio.theme
+    : JSON.parse(portfolio.theme as string || "{}");
+
+  const socialLinks = typeof portfolio.socialLinks === "object"
+    ? portfolio.socialLinks
+    : JSON.parse(portfolio.socialLinks as string || "{}");
+
+  const skills = Array.isArray(portfolio.skills)
+    ? portfolio.skills
+    : [];
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
@@ -40,7 +56,7 @@ export default async function PortfolioPage({ params }: PortfolioProps) {
             Aperçu
           </Link>
           <Link
-            href={`/dashboard/edit-portfolio`}
+            href={`/dashboard/edit-portfolio/${portfolio.id}`}
             className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded"
           >
             Modifier
@@ -62,7 +78,7 @@ export default async function PortfolioPage({ params }: PortfolioProps) {
         <div>
           <h2 className="font-semibold">Compétences</h2>
           <div className="flex flex-wrap gap-2 mt-2">
-            {skills.map((skill, idx) => (
+            {skills.map((skill: string, idx: number) => (
               <span
                 key={idx}
                 className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-sm"
@@ -115,7 +131,7 @@ export default async function PortfolioPage({ params }: PortfolioProps) {
       )}
 
       {/* Social Links */}
-      {Object.keys(socialLinks).length > 0 && (
+      {socialLinks && Object.keys(socialLinks).length > 0 && (
         <div className="mt-4 flex gap-3">
           {socialLinks.twitter && (
             <a href={socialLinks.twitter} target="_blank" className="text-blue-400">

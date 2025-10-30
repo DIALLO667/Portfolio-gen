@@ -22,10 +22,10 @@ function App() {
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-gray-100">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
+            <a href="/" className="flex items-center space-x-2">
               <Sparkles className="h-6 w-6 text-violet-500" />
               <span className="text-xl font-bold">Portfolio-gen</span>
-            </div>
+            </a>
 
             <div className="hidden md:flex space-x-8">
               <a
@@ -59,7 +59,7 @@ function App() {
 
       <main>
         {/* Hero Section */}
-        <section className="container mx-auto px-6 pt-24 pb-32 text-center">
+        <section  className="container mx-auto px-6 pt-24 pb-32 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-8">
             Créez Votre Portfolio Professionnel
             <span className="text-violet-500"> en Quelques Minutes</span>
@@ -207,10 +207,10 @@ function App() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
+              <a href="/" className="flex items-center space-x-2 mb-4">
                 <Sparkles className="h-6 w-6 text-violet-500" />
                 <span className="text-xl font-bold">Portfolio-gen</span>
-              </div>
+              </a>
               <p className="text-gray-600">
                 Créez votre portfolio professionnel en quelques minutes.
               </p>
