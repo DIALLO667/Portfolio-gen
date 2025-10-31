@@ -1,11 +1,9 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export function middleware(request: NextRequest) {
-  console.log('🔵 Middleware simple - Route:', request.nextUrl.pathname)
-  return NextResponse.next()
-}
+export default clerkMiddleware();
 
 export const config = {
-  matcher: '/:path*'
-}
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
