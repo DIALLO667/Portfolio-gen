@@ -5,8 +5,13 @@ import { ourFileRouter } from "./core";
 const UPLOADTHING_TOKEN = process.env.UPLOADTHING_TOKEN;
 
 if (!UPLOADTHING_TOKEN) {
-  throw new Error("UPLOADTHING_TOKEN n'est pas défini dans l'environnement !");
+  throw new Error(
+    "UPLOADTHING_TOKEN n'est pas défini dans l'environnement !"
+  );
 }
+
+// Optionnel : log temporaire pour vérifier que Vercel lit la variable
+console.log("UPLOADTHING_TOKEN:", UPLOADTHING_TOKEN);
 
 export const { GET, POST } = createRouteHandler({
   router: ourFileRouter,
