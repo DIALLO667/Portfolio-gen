@@ -22,14 +22,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      localization={frFR}
-    >
+    <ClerkProvider localization={frFR}>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased m-4`}>
           {children}

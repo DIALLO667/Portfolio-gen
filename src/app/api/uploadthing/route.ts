@@ -1,8 +1,12 @@
 import { createRouteHandler } from "uploadthing/next";
 import { ourFileRouter } from "./core";
 
-const UPLOADTHING_TOKEN =
-  "eyJhcGlLZXkiOiJza19saXZlXzk2NzQ4Y2RmZWViN2NkZmJmOTMwMmRlNDQyMWI1N2M2MmRlMzk0OTJmN2FhYmNlMjYzMTFmODVhMTdmYzIwMzQiLCJhcHBJZCI6IjY2cWszNnFycmQiLCJyZWdpb25zIjpbInNlYTEiXX0=";
+// On récupère le token depuis les variables d'environnement
+const UPLOADTHING_TOKEN = process.env.UPLOADTHING_TOKEN;
+
+if (!UPLOADTHING_TOKEN) {
+  throw new Error("UPLOADTHING_TOKEN n'est pas défini dans l'environnement !");
+}
 
 export const { GET, POST } = createRouteHandler({
   router: ourFileRouter,
