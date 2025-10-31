@@ -4,23 +4,17 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/api/uploadthing(.*)", // <<< ajouter ici
+  "/api/uploadthing(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  try {
-    if (!isPublicRoute(req)) {
-      await auth.protect();
-    }
-  } catch (err) {
-    console.error("Middleware error:", err);
-    return new Response("Unauthorized", { status: 401 });
+export default clerkMiddleware((auth, req) => {
+  if (!isPublicRoute(req)) {
+    auth.protect();
   }
 });
 
 export const config = {
   matcher: [
-    "/:path*",
-    "/api/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
